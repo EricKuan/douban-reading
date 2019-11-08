@@ -1,5 +1,9 @@
 #!/bin/bash
 
+urlencode () {
+	echo -n $1 | xxd -p | tr -d '\n' | sed 's/\(..\)/%\1/g'
+}
+
 dirs=(`ls -l ./ | grep '^d' | awk '{print $9}'`)
 
 readme=""
@@ -17,7 +21,8 @@ for i in ${!dirs[*]}; do
 	
 	IFS=$'\n'
 	for file in ${files[@]}; do
-		readme="${readme}\n- [《${file}》](./${dirs[$i]}/${file})"
+		url=`urlencode "./${dirs[$i]}/${file}"`
+		readme="${readme}\n- [《${file}》]($url)"
 	done
 done
 
